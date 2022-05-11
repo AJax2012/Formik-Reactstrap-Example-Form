@@ -8,7 +8,6 @@ const CustomSelectComponent = ({
   ...props
 }) => (
   <>
-    {console.log(errors[field.name])}
     <Input type="select" {...field} {...props}>
       {children}
     </Input>

@@ -1,14 +1,6 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import {
-  Col,
-  Container,
-  Label,
-  Row,
-  Button,
-  FormGroup,
-  FormFeedback
-} from "reactstrap";
+import { Formik, Form, Field } from "formik";
+import { Col, Container, Label, Row, Button, FormGroup } from "reactstrap";
 import { ReactstrapInput } from "reactstrap-formik";
 import * as yup from "yup";
 import "./styles.css";
@@ -32,6 +24,18 @@ const formSchema = yup.object().shape({
   terms: yup.boolean().oneOf([true], "You must accept the terms and conditions")
 });
 
+const getValues = (originalValues) => {
+  let vals = {
+    ...originalValues,
+    password: originalValues.password.replace(/./g, "*")
+  };
+  return vals;
+};
+
+const isValidForm = (errors, isTouched) => {
+  return Object.keys(errors).length === 0 && Object.keys(isTouched).length > 0;
+};
+
 export default function App() {
   return (
     <div className="App">
@@ -45,11 +49,11 @@ export default function App() {
         }}
         validationSchema={formSchema}
         onSubmit={(values) => {
-          console.log(values);
+          console.log(getValues(values));
         }}
       >
-        {({ values, errors, touched, isValidating }) => (
-          <Form>
+        {({ values, errors, touched }) => (
+          <Form className="text-start">
             <Container>
               <Row>
                 <Col xs="12">
@@ -83,7 +87,7 @@ export default function App() {
                       name="reason"
                       component={CustomSelectComponent}
                       id="reason"
-                      invalid={errors["reason"]}
+                      invalid={errors["reason"] && touched["reason"]}
                     >
                       <option defaultValue></option>
                       <option value="current">I'm a current user</option>
@@ -101,17 +105,26 @@ export default function App() {
                       checked={values.terms === true}
                       component={CustomCheckboxComponent}
                       className="mr-2"
-                      invalid={errors["terms"]}
+                      invalid={errors["terms"] && touched["terms"]}
                       label="I accept the terms and conditions"
                     />
-                    <ErrorMessage name="terms" component={FormFeedback} />
                   </FormGroup>
                 </Col>
               </Row>
-
-              <Button type="submit" color="success">
+              <Button
+                type="submit"
+                color="success"
+                disabled={!isValidForm(errors, touched)}
+              >
                 Submit
               </Button>
+              <hr />
+
+              <h4>Errors:</h4>
+              <pre>{JSON.stringify(errors, null, 2)}</pre>
+
+              <h4 className="mt-3">Values:</h4>
+              <pre>{JSON.stringify(getValues(values), null, 2)}</pre>
             </Container>
           </Form>
         )}
