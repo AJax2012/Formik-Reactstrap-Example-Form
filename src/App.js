@@ -6,12 +6,10 @@ import {
   Label,
   Row,
   Button,
-  Input,
   FormGroup,
   FormFeedback
 } from "reactstrap";
 import { ReactstrapInput } from "reactstrap-formik";
-// import Select from "react-select";
 import * as yup from "yup";
 import "./styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
