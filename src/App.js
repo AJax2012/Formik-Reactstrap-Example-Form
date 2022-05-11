@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import { Col, Container, Label, Row, Button, FormGroup } from "reactstrap";
 import { ReactstrapInput } from "reactstrap-formik";
 import * as yup from "yup";
-import "./styles.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import CustomSelectComponent from "./components/CustomSelectComponent";
 import CustomCheckboxComponent from "./components/CustomCheckboxComponent";
+import Prism from "prismjs";
+import "./styles.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "prismjs/components/prism-json";
 
 const passwordValidationRegex = /^((?=\S*?[A-Z])(?=\S*?[a-z])(?=\S*?[0-9]).+)\S$/;
 
@@ -37,6 +39,7 @@ const isValidForm = (errors, isTouched) => {
 };
 
 export default function App() {
+  useEffect(() => Prism.highlightAll(), []);
   return (
     <div className="App">
       <h1>This is a form</h1>
@@ -53,7 +56,7 @@ export default function App() {
         }}
       >
         {({ values, errors, touched }) => (
-          <Form className="text-start">
+          <Form className="text-start" onChange={Prism.highlightAll()}>
             <Container>
               <Row>
                 <Col xs="12">
@@ -121,10 +124,16 @@ export default function App() {
               <hr />
 
               <h4>Errors:</h4>
-              <pre>{JSON.stringify(errors, null, 2)}</pre>
+              <pre className="language-javascript">
+                <code>{JSON.stringify(errors, null, 2)}</code>
+              </pre>
 
               <h4 className="mt-3">Values:</h4>
-              <pre>{JSON.stringify(getValues(values), null, 2)}</pre>
+              <pre className="language-json line-numbers">
+                <code className="language-javascript">
+                  {JSON.stringify(getValues(values), null, 2)}
+                </code>
+              </pre>
             </Container>
           </Form>
         )}
